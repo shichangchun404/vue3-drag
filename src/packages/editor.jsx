@@ -54,7 +54,8 @@ export default defineComponent({
             top: e.offsetY,
             left: e.offsetX,
             zIndex: 1,
-            key: currentComponent.key
+            key: currentComponent.key,
+            alignCenter: true // 首次拖入后居中展示标志
           }
         ],
         
