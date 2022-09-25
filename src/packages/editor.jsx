@@ -3,6 +3,7 @@ import './editor.less'
 import EditorBlock from "./editor-block";
 import useMenuDragger from './useMenuDragger'
 import useFocus from "./useFocus";
+import useBlockDragger from "./useBlockDragger";
 
 export default defineComponent({
   props: {
@@ -33,7 +34,16 @@ export default defineComponent({
     const { dragStart, dragend } = useMenuDragger(data, containerRef)
 
     // 获取元素焦点
-    const { containerMouseDown, blockMouseDown } = useFocus(data)
+   
+    const { containerMouseDown, blockMouseDown, focusData } = useFocus(data, (e)=>{
+      // 在容器内部选择元素后 直接拖拽的回调
+      mousedown(e)
+    })
+    // 容器内部拖拽
+    const { mousedown } = useBlockDragger(focusData)
+    
+
+    
 
     return () => {
       return <div class="editor-wrap">

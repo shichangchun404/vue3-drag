@@ -19,7 +19,6 @@ export default defineComponent({
     onMounted(()=>{
       if(props.block.alignCenter){
         let { offsetWidth, offsetHeight} = blockRef.value
-        console.log(blockRef, offsetWidth, offsetHeight);
         props.block.left =  props.block.left - offsetWidth / 2
         props.block.top =  props.block.top - offsetHeight / 2
         props.block.alignCenter = false

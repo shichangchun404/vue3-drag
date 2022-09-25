@@ -1,6 +1,6 @@
 import { computed } from "vue"
 
-export default function useFocus(data){
+export default function useFocus(data, callback){
   const focusData = computed(() => {
     let focus = []
     let onfocused = []
@@ -28,9 +28,11 @@ export default function useFocus(data){
         block.focus = false
       }
     }
+    callback(e)
   }
 
   return {
+    focusData,
     containerMouseDown,
     blockMouseDown
   }
