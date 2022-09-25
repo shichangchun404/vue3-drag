@@ -18,14 +18,17 @@ export default function useFocus(data, callback){
     e.preventDefault()
     e.stopPropagation()
     // 给元素对象添加一个选中标志 focus
-    if (e.shiftKey) {
-      block.focus = !block.focus
+    if (e.shiftKey) { // 按住shift进行多选 
+      if(focusData.value.focus.length < 2){ // 多选一个时 再次点击不取消
+        block.focus = true
+      } else {
+        block.focus = !block.focus
+      }
+      
     } else {
       if (!block.focus) {
         clearBlocksFocus()
         block.focus = true
-      } else {
-        block.focus = false
       }
     }
     callback(e)
