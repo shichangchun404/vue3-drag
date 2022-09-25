@@ -5,8 +5,6 @@ export default defineComponent({
     block: { type: Object}
   },
   setup(props){
-    console.log('props.block ', props)
-    
     const blockStyle = computed(()=>{
       return {
         top: `${props.block.top}px`,
@@ -19,7 +17,6 @@ export default defineComponent({
     const RenderComponent = component.render()
     const blockRef = new ref(null)
     onMounted(()=>{
-  
       if(props.block.alignCenter){
         let { offsetWidth, offsetHeight} = blockRef.value
         console.log(blockRef, offsetWidth, offsetHeight);
@@ -28,7 +25,6 @@ export default defineComponent({
         props.block.alignCenter = false
       }
     })
-
 
     return ()=> {
       return <div class="block" style={blockStyle.value} ref={blockRef}>

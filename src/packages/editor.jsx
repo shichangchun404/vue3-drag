@@ -1,6 +1,7 @@
 import { computed, defineComponent, inject, ref } from "vue";
 import './editor.less'
 import EditorBlock from "./editor-block";
+import useMenuDragger from './useMenuDragger'
 
 export default defineComponent({
   props: {
@@ -23,53 +24,12 @@ export default defineComponent({
       }
     })
 
-    console.log('containerStyle ', containerStyle);
     const config = inject('config')
     const componentList = config.componentList
-
     const containerRef = ref(null)
-    let currentComponent = null
+    const { dragStart, dragend} = useMenuDragger(data,containerRef)
 
-    const dragenter = (e)=> {
-      // console.log('dragentter ...')
-      e.dataTransfer.dropEffect = 'move'
-    }
-    const dragover = (e)=> {
-      // console.log('dragmove ...')
-      e.preventDefault()
-      
-    }
-    const dragleave = (e)=> {
-      // console.log('dragleave ...')
-      e.dataTransfer.dropEffect = 'move'
-    }
-    const drop = (e)=> {
-      console.log('drop ...')
-      let blocks = data.value.blocks
-      data.value = { 
-        ...data.value, 
-        blocks: [
-          ...blocks,
-          {
-            top: e.offsetY,
-            left: e.offsetX,
-            zIndex: 1,
-            key: currentComponent.key,
-            alignCenter: true // 首次拖入后居中展示标志
-          }
-        ],
-        
-
-      }
-    }
-    const dragStart = (e,component) => {
-      console.log('dragStart ', component);
-      containerRef.value.addEventListener('dragenter', dragenter) // 进入容器
-      containerRef.value.addEventListener('dragover', dragover) // 经过容器
-      containerRef.value.addEventListener('dragleave', dragleave) // // 离开容器
-      containerRef.value.addEventListener('drop', drop) // // 松手时 向容器里添加拖动的组件
-      currentComponent = component
-    }
+    
     return ()=>{
       return <div class="editor-wrap">
         {/* 左侧物料区域 可进行拖拽 */}
@@ -79,7 +39,8 @@ export default defineComponent({
               return (
                 <div class="left-block-item" 
                   draggable
-                  onDragstart={ e => dragStart(e, component) }
+                  onDragstart = { e => dragStart(e, component) }
+                  onDragend  = { e => dragend(e)}
                 >
                   <span class="item-label">{component.label}</span>
                   <span class="item-component">{component.preview()}</span>
