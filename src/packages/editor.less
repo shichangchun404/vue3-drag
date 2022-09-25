@@ -32,9 +32,7 @@
   }
 
 }
-.block{
-  position: absolute;
-}
+
 .left-block-item{
   height: 100px;
   background: #fff;
@@ -60,4 +58,18 @@
     margin: 20px;
     text-align: center;
   }
+}
+.block{
+  position: absolute;
+  &::after{
+    content: '';
+    top:0px;
+    right: 0px;
+    bottom: 0px;
+    left: 0px;
+    position: absolute;
+  }
+}
+.block-focus{
+  border: 2px dashed red;
 }
