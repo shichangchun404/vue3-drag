@@ -34,16 +34,14 @@ export default defineComponent({
     const { dragStart, dragend } = useMenuDragger(data, containerRef)
 
     // 获取元素焦点
-   
-    const { containerMouseDown, blockMouseDown, focusData } = useFocus(data, (e)=>{
+    const { containerMouseDown, blockMouseDown, focusData, lastSelectedBlock } = useFocus(data, (e) => {
       // 在容器内部选择元素后 直接拖拽的回调
       mousedown(e)
     })
-    // 容器内部拖拽
-    const { mousedown } = useBlockDragger(focusData)
-    
 
-    
+    // 容器内部拖拽
+    const { mousedown, markLine } = useBlockDragger(focusData, lastSelectedBlock)
+
 
     return () => {
       return <div class="editor-wrap">
@@ -83,11 +81,13 @@ export default defineComponent({
                     return <EditorBlock
                       block={block}
                       class={block.focus ? 'block-focus' : ''}
-                      onMousedown={e => blockMouseDown(e, block)}
+                      onMousedown={e => blockMouseDown(e, block, index)}
 
                     ></EditorBlock>
                   })
                 }
+                {markLine.x && <div class='make-line-x' style={{ left: markLine.x + 'px' }}></div>}
+                {markLine.y && <div class='make-line-y' style={{ top: markLine.y + 'px' }}></div>}
               </div>
             </div>
           </div>

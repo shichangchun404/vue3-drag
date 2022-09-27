@@ -17,12 +17,14 @@ export default defineComponent({
     const RenderComponent = component.render()
     const blockRef = new ref(null)
     onMounted(()=>{
+      let { offsetWidth, offsetHeight} = blockRef.value
       if(props.block.alignCenter){
-        let { offsetWidth, offsetHeight} = blockRef.value
         props.block.left =  props.block.left - offsetWidth / 2
         props.block.top =  props.block.top - offsetHeight / 2
         props.block.alignCenter = false
       }
+      props.block.width = offsetWidth
+      props.block.height = offsetHeight
     })
 
     return ()=> {
