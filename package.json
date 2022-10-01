@@ -9,8 +9,10 @@
     "type-check": "vue-tsc --noEmit"
   },
   "dependencies": {
+    "deepcopy": "^2.1.0",
     "element-plus": "^2.2.17",
     "less": "^4.1.3",
+    "mitt": "^3.0.0",
     "pinia": "^2.0.21",
     "vue": "^3.2.38",
     "vue-router": "^4.1.5"

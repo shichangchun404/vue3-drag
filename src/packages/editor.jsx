@@ -4,6 +4,8 @@ import EditorBlock from "./editor-block";
 import useMenuDragger from './useMenuDragger'
 import useFocus from "./useFocus";
 import useBlockDragger from "./useBlockDragger";
+import useCommands from "./useCommands";
+import deepcopy from "deepcopy";
 
 export default defineComponent({
   props: {
@@ -16,7 +18,7 @@ export default defineComponent({
         return props.modelValue
       },
       set(newvalue) {
-        ctx.emit('update:modelValue', JSON.parse(JSON.stringify(newvalue)))
+        ctx.emit('update:modelValue', deepcopy(newvalue))
       }
     })
     const containerStyle = computed(() => {
@@ -42,6 +44,14 @@ export default defineComponent({
     // 容器内部拖拽
     const { mousedown, markLine } = useBlockDragger(focusData, lastSelectedBlock)
 
+    const { commands } = useCommands(data)
+    const buttons = [
+      {label: '撤销', handler: ()=> commands.undo()},
+      {label: '重做', handler: ()=> commands.redo()},
+      
+     
+    ]
+
 
     return () => {
       return <div class="editor-wrap">
@@ -65,9 +75,17 @@ export default defineComponent({
           }
 
         </div>
-
+        
         <div class="editor-wrap-mid">
-          <div class="menu">编辑工具栏</div>
+          {/* 编辑栏区 */}
+          <div class="menu">
+            {
+              buttons.map(item => {
+                return <div class="editor-menu-button" onClick={item.handler}>{item.label}</div>
+              })
+            }
+          </div>
+          {/* 拖拽视图区 */}
           <div class="container-wrap">
             <div class="container-layout">
               <div
@@ -92,6 +110,7 @@ export default defineComponent({
             </div>
           </div>
         </div>
+        {/* 属性编辑区 */}
         <div class="editor-wrap-right">右侧属性控制栏</div>
       </div>
     }

@@ -1,3 +1,5 @@
+import { events } from "./events"
+
 export default function useMenuDragger(data,containerRef){
   let currentComponent = null
 
@@ -32,6 +34,7 @@ export default function useMenuDragger(data,containerRef){
       containerRef.value.addEventListener('dragleave', dragleave) // // 离开容器
       containerRef.value.addEventListener('drop', drop) // // 松手时 向容器里添加拖动的组件
       currentComponent = component
+      events.emit('start')
     }
     const dragend = (e) => {
       containerRef.value.removeEventListener('dragenter', dragenter) // 进入容器
@@ -39,6 +42,7 @@ export default function useMenuDragger(data,containerRef){
       containerRef.value.removeEventListener('dragleave', dragleave) // // 离开容器
       containerRef.value.removeEventListener('drop', drop) // // 松手时 向容器里添加拖动的组件
       currentComponent = null
+      events.emit('end')
     }
 
     return {
