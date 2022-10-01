@@ -12,8 +12,8 @@ export default function useCommands(data){
   }
   const registry = (command)=>{
     state.commandArray.push(command)
-    state.commands[command.name] = ()=>{
-      const { redo, undo } = command.execute()
+    state.commands[command.name] = (...arg)=>{
+      const { redo, undo } = command.execute(...arg)
       redo()
       if(command.pushQueue){
         let {current, queue} = state
@@ -47,7 +47,6 @@ export default function useCommands(data){
       }
     }
   })
-
   // 前进/重做
   registry({
     name: 'redo',
@@ -64,7 +63,7 @@ export default function useCommands(data){
       }
     }
   })
- 
+  // 菜单拖拽
   registry({
     name: 'drag', 
     pushQueue: true, // 可以把事件放到队列中
@@ -100,7 +99,27 @@ export default function useCommands(data){
       }
     }
   })
+  // 应用json数据
+  registry({
+    name: 'applyJson',
+    pushQueue: true,
+    execute(newValue){
+      let state = {
+        before: data.value,
+        after: newValue
+      }
+      return {
+        redo(){
+          data.value = state.after
+        },
+        undo(){
+          data.value = state.before
+        }
+      }
+    }
+  })
   
+  // 监听快捷键
   const keyboardEvent = ()=>{
     const keyCodes = {
       89: 'y',
@@ -127,6 +146,7 @@ export default function useCommands(data){
     }
     return init()
   }
+
   // 初始化
   ;(()=>{
     state.destroyArray.push(keyboardEvent())
@@ -137,7 +157,6 @@ export default function useCommands(data){
       }
     })
   })()
-
   onUnmounted(()=>{ // 清理events监听的事件
     state.destroyArray.forEach(off => off&&off())
   })

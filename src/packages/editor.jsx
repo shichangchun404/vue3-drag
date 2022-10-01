@@ -6,6 +6,7 @@ import useFocus from "./useFocus";
 import useBlockDragger from "./useBlockDragger";
 import useCommands from "./useCommands";
 import deepcopy from "deepcopy";
+import { $dialog }  from "../components/dialog";
 
 export default defineComponent({
   props: {
@@ -48,7 +49,23 @@ export default defineComponent({
     const buttons = [
       {label: '撤销', handler: ()=> commands.undo()},
       {label: '重做', handler: ()=> commands.redo()},
-      
+      {label: '导入', handler: ()=> {
+        $dialog({
+          title: '导入JSON数据',
+          content: '',
+          footer: true,
+          onConfirm(content){
+            // data.value = JSON.parse(content) // 无法记录前进后退操作
+            commands.applyJson(JSON.parse(content))
+          }
+        })
+      }},
+      {label: '导出', handler: ()=> {
+        $dialog({
+          title: '导出JSON数据',
+          content: JSON.stringify(data.value),
+        })
+      }},
      
     ]
 
