@@ -2,7 +2,7 @@ import deepcopy from "deepcopy"
 import { onUnmounted } from "vue"
 import { events } from "./events"
 
-export default function useCommands(data){
+export default function useCommands(data,focusData){
   const state = {
     current: -1 , // 前进后退索引值
     queue: [] , // 存放所有操作指令
@@ -114,6 +114,62 @@ export default function useCommands(data){
         },
         undo(){
           data.value = state.before
+        }
+      }
+    }
+  })
+  // 置顶
+  registry({
+    name: 'placeTop',
+    execute(){
+      let before = deepcopy(data.value.blocks)
+      let after = (()=>{
+        let { focus, unfocused } = focusData.value
+        let maxZIndex = unfocused.reduce((pre,current)=>{
+          return Math.max(pre,current.zIndex)
+        }, -Infinity) + 1
+        focus.forEach(item => {
+          item.zIndex = maxZIndex
+        })
+        return data.value.blocks
+      })()
+      return {
+        redo(){
+          data.value = {...data.value, blocks: after}
+        },
+        undo(){
+          data.value = {...data.value, blocks: before}
+        }
+      }
+    }
+  })
+  // 置底
+  registry({
+    name: 'placeBottom',
+    execute(){
+      let before = deepcopy(data.value.blocks)
+      let after = (()=>{
+        let { focus, unfocused } = focusData.value
+        let minZIndex = unfocused.reduce((pre,current)=>{
+          return Math.min(pre,current.zIndex)
+        }, Infinity) - 1
+        if(minZIndex<0){ // 避免元素zindex过小 在画布下面 无法显示
+          minZIndex = Math.abs(minZIndex)
+          unfocused.forEach(block => {
+            block.zIndex =  block.zIndex + minZIndex
+          })
+        }
+        focus.forEach(item => {
+          item.zIndex = minZIndex
+        })
+        return data.value.blocks
+      })()
+      return {
+        redo(){
+          data.value = {...data.value, blocks: after}
+        },
+        undo(){
+          data.value = {...data.value, blocks: before}
         }
       }
     }

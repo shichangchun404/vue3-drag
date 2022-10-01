@@ -45,7 +45,7 @@ export default defineComponent({
     // 容器内部拖拽
     const { mousedown, markLine } = useBlockDragger(focusData, lastSelectedBlock)
 
-    const { commands } = useCommands(data)
+    const { commands } = useCommands(data,focusData)
     const buttons = [
       {label: '撤销', handler: ()=> commands.undo()},
       {label: '重做', handler: ()=> commands.redo()},
@@ -66,6 +66,8 @@ export default defineComponent({
           content: JSON.stringify(data.value),
         })
       }},
+      {label: '置顶', handler: ()=> commands.placeTop()},
+      {label: '置底', handler: ()=> commands.placeBottom()},
      
     ]
 

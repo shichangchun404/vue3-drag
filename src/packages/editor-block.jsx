@@ -9,7 +9,7 @@ export default defineComponent({
       return {
         top: `${props.block.top}px`,
         left: `${props.block.left}px`,
-        zIndex: `${props.block.zIndex}px`,
+        zIndex: props.block.zIndex,
       }
     })
     const config = inject('config')
