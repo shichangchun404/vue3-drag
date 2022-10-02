@@ -18,8 +18,8 @@ export default defineComponent({
       get() {
         return props.modelValue
       },
-      set(newvalue) {
-        ctx.emit('update:modelValue', deepcopy(newvalue))
+      set(newValue) {
+        ctx.emit('update:modelValue', deepcopy(newValue))
       }
     })
     const containerStyle = computed(() => {
@@ -33,11 +33,14 @@ export default defineComponent({
     const componentList = config.componentList
     const containerRef = ref(null)
 
+    const previewRef = ref(false) // 是否预览标志
+    const closeRef = ref(false) // 关闭菜单栏标志
+
     // 菜单的拖拽
     const { dragStart, dragend } = useMenuDragger(data, containerRef)
 
     // 获取元素焦点
-    const { containerMouseDown, blockMouseDown, focusData, lastSelectedBlock } = useFocus(data, (e) => {
+    const { containerMouseDown, blockMouseDown,clearBlocksFocus, focusData, lastSelectedBlock } = useFocus(data, previewRef, (e) => {
       // 在容器内部选择元素后 直接拖拽的回调
       mousedown(e)
     })
@@ -68,14 +71,23 @@ export default defineComponent({
       }},
       {label: '置顶', handler: ()=> commands.placeTop()},
       {label: '置底', handler: ()=> commands.placeBottom()},
-     
+      {label: '删除', handler: ()=> commands.delete()},
+      {label: ()=> previewRef.value?'编辑':'预览', handler: ()=> {
+        previewRef.value = !previewRef.value
+        clearBlocksFocus()
+      }},
+      {label: ()=>closeRef.value?'返回':'全屏', handler: ()=> {
+        closeRef.value = !closeRef.value
+        clearBlocksFocus()
+      }},
     ]
 
 
     return () => {
       return <div class="editor-wrap">
         {/* 左侧物料区域 可进行拖拽 */}
-        <div class="editor-wrap-left">
+        {
+          !closeRef.value && <div class="editor-wrap-left">
           {
             componentList.map(component => {
               return (
@@ -92,15 +104,18 @@ export default defineComponent({
 
             })
           }
-
-        </div>
+          </div>
+        }
+        
         
         <div class="editor-wrap-mid">
           {/* 编辑栏区 */}
           <div class="menu">
             {
               buttons.map(item => {
-                return <div class="editor-menu-button" onClick={item.handler}>{item.label}</div>
+                return <div class="editor-menu-button" onClick={item.handler}>
+                  { typeof item.label === 'function' ? item.label() : item.label}
+                </div>
               })
             }
           </div>
@@ -116,10 +131,11 @@ export default defineComponent({
                 {
                   data.value.blocks.map((block, index) => {
                     return <EditorBlock
+                      key={block.key+index}
                       block={block}
                       class={block.focus ? 'block-focus' : ''}
+                      class={previewRef.value?'block-preview':''}
                       onMousedown={e => blockMouseDown(e, block, index)}
-
                     ></EditorBlock>
                   })
                 }
@@ -130,7 +146,10 @@ export default defineComponent({
           </div>
         </div>
         {/* 属性编辑区 */}
-        <div class="editor-wrap-right">右侧属性控制栏</div>
+        {
+          !closeRef.value && <div class="editor-wrap-right">右侧属性控制栏</div>
+        }
+        
       </div>
     }
   }

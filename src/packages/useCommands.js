@@ -24,7 +24,6 @@ export default function useCommands(data,focusData){
         state.queue.push({redo, undo})
         state.current = current + 1
       }
-      console.log(state.queue)
     }
   }
 
@@ -68,7 +67,6 @@ export default function useCommands(data,focusData){
     name: 'drag', 
     pushQueue: true, // 可以把事件放到队列中
     init(){
-      console.log('=== init ')
       this.before = null // 记录之前的数据
       // 拖动前记录之前的数据
       const start = ()=> {
@@ -121,6 +119,7 @@ export default function useCommands(data,focusData){
   // 置顶
   registry({
     name: 'placeTop',
+    pushQueue: true,
     execute(){
       let before = deepcopy(data.value.blocks)
       let after = (()=>{
@@ -146,6 +145,7 @@ export default function useCommands(data,focusData){
   // 置底
   registry({
     name: 'placeBottom',
+    pushQueue: true,
     execute(){
       let before = deepcopy(data.value.blocks)
       let after = (()=>{
@@ -174,6 +174,25 @@ export default function useCommands(data,focusData){
       }
     }
   })
+  // 
+  registry({
+    name: 'delete',
+    pushQueue: true,
+    execute(){
+      let state = {
+        before: deepcopy(data.value.blocks),
+        after: focusData.value.unfocused
+      }
+      return {
+        redo(){
+          data.value = {...data.value, blocks: state.after}
+        },
+        undo(){
+          data.value = {...data.value, blocks: state.before}
+        },
+      }
+    }
+  })
   
   // 监听快捷键
   const keyboardEvent = ()=>{
@@ -182,7 +201,6 @@ export default function useCommands(data,focusData){
       90: 'z'
     }
     const onKeydown = (e)=>{
-      console.log(' onKeydown ', e)
       const { ctrlKey, keyCode} = e
       if(ctrlKey && keyCodes[keyCode]){
         const keyboardStr = `ctrl+${keyCodes[keyCode]}`

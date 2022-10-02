@@ -1,6 +1,6 @@
 import { computed, ref } from "vue"
 
-export default function useFocus(data, callback){
+export default function useFocus(data, previewRef, callback){
   const selectIndex = ref(-1) // 最后一个选中的索引值
   const lastSelectedBlock = computed(()=>{ // 最后一个选中的元素 用于做辅助线的参考元素B
     return data.value.blocks[selectIndex.value]
@@ -13,6 +13,9 @@ export default function useFocus(data, callback){
     return { focus, unfocused }
   })
   const containerMouseDown = () => { // 点击容器 失去所有焦点
+    if(previewRef.value){
+      return
+    }
     clearBlocksFocus()
     selectIndex.value = -1
   }
@@ -21,6 +24,9 @@ export default function useFocus(data, callback){
   }
 
   const blockMouseDown = (e, block, index) => {
+    if(previewRef.value){
+      return
+    }
     e.preventDefault()
     e.stopPropagation()
     // 给元素对象添加一个选中标志 focus
@@ -45,6 +51,7 @@ export default function useFocus(data, callback){
     lastSelectedBlock,
     focusData,
     containerMouseDown,
-    blockMouseDown
+    blockMouseDown,
+    clearBlocksFocus
   }
 }
