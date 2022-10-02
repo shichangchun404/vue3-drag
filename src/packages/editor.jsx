@@ -7,6 +7,7 @@ import useBlockDragger from "./useBlockDragger";
 import useCommands from "./useCommands";
 import deepcopy from "deepcopy";
 import { $dialog }  from "../components/dialog";
+import { $dropdown, DropdownItem } from "../components/dropdown";
 
 export default defineComponent({
   props: {
@@ -34,7 +35,7 @@ export default defineComponent({
     const containerRef = ref(null)
 
     const previewRef = ref(false) // 是否预览标志
-    const closeRef = ref(false) // 关闭菜单栏标志
+    const fullScreenRef = ref(false) // 全屏预览标志
 
     // 菜单的拖拽
     const { dragStart, dragend } = useMenuDragger(data, containerRef)
@@ -76,22 +77,50 @@ export default defineComponent({
         previewRef.value = !previewRef.value
         clearBlocksFocus()
       }},
-      {label: ()=>closeRef.value?'返回编辑':'全屏预览', handler: ()=> {
-        closeRef.value = !closeRef.value
+      {label: ()=>fullScreenRef.value?'返回编辑':'全屏预览', handler: ()=> {
+        fullScreenRef.value = !fullScreenRef.value
         clearBlocksFocus()
       }},
     ]
 
+    const onContextMenublock = (e,block)=>{
+      console.log(e)
+      e.preventDefault()
+      $dropdown({
+        el: e.target,
+        content:<>
+          <DropdownItem label="删除" onclick={commands.delete}></DropdownItem>
+          <DropdownItem label="置顶" onclick={commands.placeTop}></DropdownItem>
+          <DropdownItem label="置低" onclick={commands.placeBottom}></DropdownItem>
+          <DropdownItem label="导出" onclick={()=>{
+            $dialog({
+              title: '导出JSON数据',
+              content: JSON.stringify(block),
+            })
+          }}></DropdownItem>
+          <DropdownItem label="导入" onclick={()=>{
+             $dialog({
+              title: '导入JSON数据',
+              content: '',
+              footer: true,
+              onConfirm(content){
+                commands.applyJsonSingleBlock(JSON.parse(content),block)
+              }
+            })
+          }}></DropdownItem>
+        </>
+      })
+    }
 
     return () => {
-      return closeRef.value ? 
+      return fullScreenRef.value ? /** 全屏预览 */
       (
         <div class="editor-wrap">
         {/* 左侧物料区域 可进行拖拽 */}
         <div class="editor-wrap-mid">
           {/* 编辑栏区 */}
           <div class="menu menu-fixed">
-            <div class="editor-menu-button" onClick={()=>closeRef.value=false}>
+            <div class="editor-menu-button" onClick={()=>fullScreenRef.value=false}>
               返回编辑
             </div>
           </div>
@@ -115,7 +144,7 @@ export default defineComponent({
         {/* 属性编辑区 */}
         </div>
       )
-      :
+      :  /** 正常编辑 */
       (
         <div class="editor-wrap">
         {/* 左侧物料区域 可进行拖拽 */}
@@ -166,6 +195,7 @@ export default defineComponent({
                       class={block.focus ? 'block-focus' : ''}
                       class={previewRef.value?'block-preview':''}
                       onMousedown={e => blockMouseDown(e, block, index)}
+                      onContextmenu={e=> onContextMenublock(e, block)}
                     ></EditorBlock>
                   })
                 }

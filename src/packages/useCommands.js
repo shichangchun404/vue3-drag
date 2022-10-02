@@ -116,6 +116,30 @@ export default function useCommands(data,focusData){
       }
     }
   })
+  // 应用单个json数据
+  registry({
+    name: 'applyJsonSingleBlock',
+    pushQueue: true,
+    execute(newValue, oldValue){
+      let state = {
+        before: deepcopy(data.value.blocks),
+        after: (()=>{
+          let blocks = [...data.value.blocks]
+          let index = data.value.blocks.indexOf(oldValue)
+          blocks.splice(index,1,newValue)
+          return blocks
+        })()
+      }
+      return {
+        redo(){
+          data.value = {...data.value, blocks: state.after}
+        },
+        undo(){
+          data.value = {...data.value, blocks: state.before}
+        }
+      }
+    }
+  })
   // 置顶
   registry({
     name: 'placeTop',
