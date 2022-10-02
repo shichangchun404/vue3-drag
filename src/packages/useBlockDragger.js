@@ -1,7 +1,7 @@
 import { reactive } from "vue"
 import { events } from "./events"
 
-export default function useBlockDragger(focusData, lastSelectedBlock){
+export default function useBlockDragger(data, focusData, lastSelectedBlock){
   let blockState = {
     startX: 0,
     startY: 0,
@@ -22,12 +22,18 @@ export default function useBlockDragger(focusData, lastSelectedBlock){
       startTop: lastSelectedBlock.value.top,
       prositions,
       lines: (()=>{
-        const {unfocused} = focusData.value
         let lines = {
           x:[], // x轴参考线 |
           y:[]  // y轴参考线 -
         }
-        unfocused.forEach(block => {
+        const {unfocused} = focusData.value
+        const list = [...unfocused, { // 容器的参考线
+          top:0,
+          left:0,
+          width: data.value.container.width,
+          height: data.value.container.height
+        }]
+        list.forEach(block => {
           let {top:ATop, left: ALeft,width:AWidth,height:AHeight} = block
           // 上下对齐
           lines.y.push({showTop:ATop, top:ATop}) // 顶对顶 当AB顶对齐时 辅助线以A的top值为参考线 B距离top值为ATop

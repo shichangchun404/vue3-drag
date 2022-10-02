@@ -47,7 +47,7 @@ export default defineComponent({
     })
 
     // 容器内部拖拽
-    const { mousedown, markLine } = useBlockDragger(focusData, lastSelectedBlock)
+    const { mousedown, markLine } = useBlockDragger(data, focusData, lastSelectedBlock)
 
     const { commands } = useCommands(data,focusData)
     const buttons = [
