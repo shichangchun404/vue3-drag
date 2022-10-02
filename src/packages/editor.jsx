@@ -192,8 +192,7 @@ export default defineComponent({
                     return <EditorBlock
                       key={block.key+index}
                       block={block}
-                      class={block.focus ? 'block-focus' : ''}
-                      class={previewRef.value?'block-preview':''}
+                      class={[{'block-focus': block.focus}, {'block-preview':previewRef.value} ]}
                       onMousedown={e => blockMouseDown(e, block, index)}
                       onContextmenu={e=> onContextMenublock(e, block)}
                     ></EditorBlock>
