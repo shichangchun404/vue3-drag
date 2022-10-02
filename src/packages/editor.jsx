@@ -76,7 +76,7 @@ export default defineComponent({
         previewRef.value = !previewRef.value
         clearBlocksFocus()
       }},
-      {label: ()=>closeRef.value?'返回':'全屏', handler: ()=> {
+      {label: ()=>closeRef.value?'返回编辑':'全屏预览', handler: ()=> {
         closeRef.value = !closeRef.value
         clearBlocksFocus()
       }},
@@ -84,29 +84,59 @@ export default defineComponent({
 
 
     return () => {
-      return <div class="editor-wrap">
+      return closeRef.value ? 
+      (
+        <div class="editor-wrap">
         {/* 左侧物料区域 可进行拖拽 */}
-        {
-          !closeRef.value && <div class="editor-wrap-left">
-          {
-            componentList.map(component => {
-              return (
-                <div
-                  class="left-block-item"
-                  draggable
-                  onDragstart={e => dragStart(e, component)}
-                  onDragend={e => dragend(e)}
-                >
-                  <span class="item-label">{component.label}</span>
-                  <span class="item-component">{component.preview()}</span>
-                </div>
-              )
-
-            })
-          }
+        <div class="editor-wrap-mid">
+          {/* 编辑栏区 */}
+          <div class="menu menu-fixed">
+            <div class="editor-menu-button" onClick={()=>closeRef.value=false}>
+              返回编辑
+            </div>
           </div>
+          {/* 拖拽视图区 */}
+          <div class="container-wrap">
+            <div class="container-layout">
+              <div class="container" style={containerStyle.value}>
+                {
+                  data.value.blocks.map((block, index) => {
+                    return <EditorBlock
+                      key={block.key+index}
+                      block={block}
+                      class='block-preview'
+                    ></EditorBlock>
+                  })
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+        {/* 属性编辑区 */}
+        </div>
+      )
+      :
+      (
+        <div class="editor-wrap">
+        {/* 左侧物料区域 可进行拖拽 */}
+        <div class="editor-wrap-left">
+        {
+          componentList.map(component => {
+            return (
+              <div
+                class="left-block-item"
+                draggable
+                onDragstart={e => dragStart(e, component)}
+                onDragend={e => dragend(e)}
+              >
+                <span class="item-label">{component.label}</span>
+                <span class="item-component">{component.preview()}</span>
+              </div>
+            )
+
+          })
         }
-        
+        </div>
         
         <div class="editor-wrap-mid">
           {/* 编辑栏区 */}
@@ -146,11 +176,11 @@ export default defineComponent({
           </div>
         </div>
         {/* 属性编辑区 */}
-        {
-          !closeRef.value && <div class="editor-wrap-right">右侧属性控制栏</div>
-        }
+        <div class="editor-wrap-right">右侧属性控制栏</div>
         
       </div>
+      )
+       
     }
   }
 })
