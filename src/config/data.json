@@ -6,6 +6,6 @@
   "blocks": [
     {"top":100, "left":100, "zIndex":1, "key": "text","props":{"text":"文字信息", "size": "14px", "color":"#ff0000"}},
     {"top":200, "left":200, "zIndex":1, "key": "button","props":{"text":"按钮文字", "size": "default", "type":"primary"}},
-    {"top":300, "left":300, "zIndex":1, "key": "input","props":{}}
+    {"top":300, "left":300, "zIndex":1, "key": "input","props":{},"model":{}}
   ]
 }

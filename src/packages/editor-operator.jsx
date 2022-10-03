@@ -37,25 +37,34 @@ export default defineComponent({
         let component = config.componentMap[props.block.key]
         if(component && component.props){ // [ ['key',obj], ['key',obj]]
           let list = Object.entries(component.props)
-          content = list.map(([propName, propConfig])=>{
-            return <ElFormItem label={propConfig.label}>
-              {
+          content.push(
+            list.map(([propName, propConfig])=>{
+              return <ElFormItem label={propConfig.label}>
                 {
-                  input(){ return <ElInput v-model={state.editData.props[propName]}></ElInput> } ,
-                  color(){ return <ElColorPicker v-model={state.editData.props[propName]}></ElColorPicker>},
-                  select(){ return <ElSelect v-model={state.editData.props[propName]}>
-                    {
-                      propConfig.options.map(opt => {
-                        return <ElOption label={opt.label} value={opt.value}></ElOption>
-                      })
-                    }
-                  </ElSelect>}
-                }[propConfig.type]()
-              }
-            </ElFormItem>
-          })
+                  {
+                    input(){ return <ElInput v-model={state.editData.props[propName]}></ElInput> } ,
+                    color(){ return <ElColorPicker v-model={state.editData.props[propName]}></ElColorPicker>},
+                    select(){ return <ElSelect v-model={state.editData.props[propName]}>
+                      {
+                        propConfig.options.map(opt => {
+                          return <ElOption label={opt.label} value={opt.value}></ElOption>
+                        })
+                      }
+                    </ElSelect>}
+                  }[propConfig.type]()
+                }
+              </ElFormItem>
+            })
+          )
         }
-
+        if(component && component.model){
+          let list =  Object.entries(component.model)
+          content.push(list.map(([modelName, label])=>{
+            return <ElFormItem label={label}>
+              <ElInput v-model={state.editData.model[modelName]}></ElInput>
+            </ElFormItem>
+          }))
+        }
       }else{
         content.push(
           <>

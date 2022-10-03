@@ -12,7 +12,8 @@ import EditorOperator from './editor-operator'
 
 export default defineComponent({
   props: {
-    modelValue: { type: Object }
+    modelValue: { type: Object },
+    formData: { type: Object}
   },
   emits: ['update:modelValue'],
   setup(props, ctx) {
@@ -141,6 +142,7 @@ export default defineComponent({
                         return <EditorBlock
                           key={block.key + index}
                           block={block}
+                          formData={props.formData}
                           class='block-preview'
                         ></EditorBlock>
                       })
@@ -203,6 +205,7 @@ export default defineComponent({
                           class={[{ 'block-focus': block.focus }, { 'block-preview': previewRef.value }]}
                           onMousedown={e => blockMouseDown(e, block, index)}
                           onContextmenu={e => onContextMenublock(e, block)}
+                          formData={props.formData}
                         ></EditorBlock>
                       })
                     }

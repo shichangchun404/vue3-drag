@@ -24,7 +24,8 @@ export default function useMenuDragger(data,containerRef){
             zIndex: 1,
             key: currentComponent.key,
             alignCenter: true, // 首次拖入后居中展示标志
-            props: {}
+            props: {},
+            model: {}
           }
         ],
       }

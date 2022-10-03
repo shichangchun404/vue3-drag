@@ -39,7 +39,7 @@ editorConfig.register({
 editorConfig.register({
   label: '按钮',
   preview: ()=> <ElButton>预览按钮</ElButton>,
-  render: ({props})=> <ElButton type={ props.type} size={ props.size}>{props.text}</ElButton>,
+  render: ({props})=> <ElButton type={ props.type} size={ props.size}>{props.text || "默认文字"}</ElButton>,
   key: 'button',
   props: {
     text: createInputProps('按钮内容'),
@@ -62,6 +62,9 @@ editorConfig.register({
 editorConfig.register({
   label: '输入框',
   preview: ()=> <ElInput placeholder="预览输入框"></ElInput>,
-  render: ()=> <ElInput placeholder="渲染输入框"></ElInput>,
-  key: 'input'
+  render: ({model})=> <ElInput {...model.default} placeholder="渲染输入框"></ElInput>,
+  key: 'input',
+  model:{
+    default: '字段名称'
+  }
 })

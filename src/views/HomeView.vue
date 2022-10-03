@@ -6,12 +6,17 @@ import { editorConfig as config} from '../utils/edilor-config.jsx'
 
 const state = ref(data)
 provide('config',config)
+
+const formData = ref({
+  username: 'scc',
+  password: '123'
+})
 </script>
 
 <template>
   <div class="home">
     <!-- <Editor :data="state" /> -->
-    <Editor v-model="state" /> 
+    <Editor v-model="state" :formData="formData"/> 
   </div>
 </template>
 
