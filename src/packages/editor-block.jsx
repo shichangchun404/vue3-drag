@@ -13,8 +13,7 @@ export default defineComponent({
       }
     })
     const config = inject('config')
-    const component = config.componentMap[props.block.key]
-    const RenderComponent = component.render()
+    
     const blockRef = new ref(null)
     onMounted(()=>{
       let { offsetWidth, offsetHeight} = blockRef.value
@@ -28,6 +27,10 @@ export default defineComponent({
     })
 
     return ()=> {
+      const component = config.componentMap[props.block.key]
+      const RenderComponent = component.render({
+        props: props.block.props
+      })
       return <div class="block" style={blockStyle.value} ref={blockRef}>
         { RenderComponent }
       </div>

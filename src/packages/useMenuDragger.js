@@ -23,7 +23,8 @@ export default function useMenuDragger(data,containerRef){
             left: e.offsetX,
             zIndex: 1,
             key: currentComponent.key,
-            alignCenter: true // 首次拖入后居中展示标志
+            alignCenter: true, // 首次拖入后居中展示标志
+            props: {}
           }
         ],
       }

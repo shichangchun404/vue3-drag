@@ -97,9 +97,9 @@ export default function useCommands(data,focusData){
       }
     }
   })
-  // 应用json数据
+  // 应用json数据 更新整个容器
   registry({
-    name: 'applyJson',
+    name: 'updateContainer',
     pushQueue: true,
     execute(newValue){
       let state = {
@@ -116,9 +116,9 @@ export default function useCommands(data,focusData){
       }
     }
   })
-  // 应用单个json数据
+  // 应用单个json数据 更新单个组件
   registry({
-    name: 'applyJsonSingleBlock',
+    name: 'updateBlock',
     pushQueue: true,
     execute(newValue, oldValue){
       let state = {
