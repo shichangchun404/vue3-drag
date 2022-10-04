@@ -2,6 +2,7 @@ import deepcopy from "deepcopy";
 import { ElButton, ElColorPicker, ElForm, ElFormItem, ElInput, ElInputNumber, ElOption, ElSelect, selectV2InjectionKey } from "element-plus";
 
 import { computed, defineComponent, inject, reactive, watch } from "vue";
+import TabelEditor from "./tabel-editor";
 
 export default defineComponent({
   props:{
@@ -50,7 +51,8 @@ export default defineComponent({
                           return <ElOption label={opt.label} value={opt.value}></ElOption>
                         })
                       }
-                    </ElSelect>}
+                    </ElSelect>},
+                    tabel(){ return <TabelEditor propConfig={propConfig} v-model={state.editData.props[propName]}></TabelEditor>}
                   }[propConfig.type]()
                 }
               </ElFormItem>

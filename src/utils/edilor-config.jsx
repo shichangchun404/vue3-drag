@@ -1,4 +1,4 @@
-import { ElButton, ElInput} from 'element-plus'
+import { ElButton, ElInput, ElOption, ElSelect} from 'element-plus'
 import Range from '../components/range'
 function createEditorConfig(){
   let componentList = []
@@ -17,6 +17,7 @@ function createEditorConfig(){
 const createInputProps = (label)=>({ type: 'input', label})
 const createColorProps = (label)=>({ type: 'color', label})
 const createSelectProps = (label,options)=>({ type: 'select', label, options})
+const createTableProps = (label,table)=>({ type: 'tabel', label, table})
 
 export let editorConfig = createEditorConfig()
 editorConfig.register({
@@ -86,5 +87,35 @@ editorConfig.register({
   model:{
     start: '开始属性',
     end: '结束属性'
+  }
+})
+
+editorConfig.register({
+  label: '下拉选择',
+  preview: ()=> {
+    return <ElSelect modelValue=""></ElSelect>
+  },
+  render: ({props, model})=>{
+    return <ElSelect {...model.default}>
+      {
+        (props.options||[]).map((item,index)=>{
+          return <ElOption label={item.label} value={item.value} key={index}></ElOption>
+        })
+      }
+    </ElSelect>
+  },
+  key: 'select',
+  props: {
+    options: createTableProps('下拉选项', {
+      options: [
+        {label: '显示值', field: 'label'},
+        {label: '绑定值', field: 'value'},
+      ],
+      showKey: 'label', // 展示的key
+
+    }) 
+  },
+  model:{
+    default: '绑定值'
   }
 })
