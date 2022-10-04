@@ -147,6 +147,9 @@ export default defineComponent({
                         ></EditorBlock>
                       })
                     }
+                    {
+                     JSON.stringify(props.formData)
+                    }
                   </div>
                 </div>
               </div>
