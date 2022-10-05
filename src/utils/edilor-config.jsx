@@ -22,8 +22,9 @@ const createTableProps = (label,table)=>({ type: 'tabel', label, table})
 export let editorConfig = createEditorConfig()
 editorConfig.register({
   label: '文本',
+  resize: { width: true, height: true}, // 可调整宽高的标志
   preview: ()=> '预览文本',
-  render: ({props})=> <span style={ {color: props.color, fontSize: props.size}}> { props.text || '默认文字'}</span>,
+  render: ({props, size})=> <p style={ {color: props.color, fontSize: props.size, textAlign:props.textAlign, ...size}}> { props.text || '默认文字'}</p>,
   key: 'text',
   props: {
     text: createInputProps('文本内容'),
@@ -35,13 +36,19 @@ editorConfig.register({
       {label: '18px', value: '18px'},
       {label: '20px', value: '20px'}
     ]),
+    textAlign:createSelectProps('水平对齐', [
+      {label: '居左', value: 'left'},
+      {label: '居中', value: 'center'},
+      {label: '居右', value: 'right'},
+    ])
   }
 })
 
 editorConfig.register({
   label: '按钮',
+  resize: { width: true, height: true}, // 可调整宽高的标志
   preview: ()=> <ElButton>预览按钮</ElButton>,
-  render: ({props})=> <ElButton type={ props.type} size={ props.size}>{props.text || "默认文字"}</ElButton>,
+  render: ({props, size})=> <ElButton type={ props.type} style={ size }>{props.text || "默认文字"}</ElButton>,
   key: 'button',
   props: {
     text: createInputProps('按钮内容'),
@@ -112,7 +119,6 @@ editorConfig.register({
         {label: '绑定值', field: 'value'},
       ],
       showKey: 'label', // 展示的key
-
     }) 
   },
   model:{
