@@ -13,9 +13,6 @@ const formData = ref({
   start: 1,
   end: 100,
 })
-const test = () => {
-  console.log('ttt')
-}
 </script>
 
 <template>
