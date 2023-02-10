@@ -4,14 +4,14 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "vite",
-    "build": "run-p type-check build-only",
+    "build": "npm run lint && run-p type-check build-only",
     "preview": "vite preview --port 4173",
     "build-only": "vite build",
     "type-check": "vue-tsc --noEmit",
     "prepare": "husky install",
     "commitlint": "commitlint --config commitlint.config.js -e -V",
     "commit": "cz",
-    "eslint": "eslint src"
+    "lint": "eslint src"
   },
   "dependencies": {
     "deepcopy": "^2.1.0",

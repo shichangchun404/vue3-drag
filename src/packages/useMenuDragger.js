@@ -38,7 +38,7 @@ export default function useMenuDragger(data, containerRef) {
     currentComponent = component
     events.emit('start')
   }
-  const dragend = (e) => {
+  const dragend = () => {
     containerRef.value.removeEventListener('dragenter', dragenter) // 进入容器
     containerRef.value.removeEventListener('dragover', dragover) // 经过容器
     containerRef.value.removeEventListener('dragleave', dragleave) // // 离开容器
