@@ -2,11 +2,14 @@
   "name": "vue-drag",
   "version": "0.0.0",
   "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "vite",
     "build": "run-p type-check build-only",
     "preview": "vite preview --port 4173",
     "build-only": "vite build",
-    "type-check": "vue-tsc --noEmit"
+    "type-check": "vue-tsc --noEmit",
+    "commitlint": "commitlint --config commitlint.config.js -e -V",
+    "prepare": "husky install"
   },
   "dependencies": {
     "deepcopy": "^2.1.0",
@@ -18,10 +21,13 @@
     "vue-router": "^4.1.5"
   },
   "devDependencies": {
+    "@commitlint/cli": "^17.4.2",
+    "@commitlint/config-conventional": "^17.4.2",
     "@types/node": "^16.11.56",
     "@vitejs/plugin-vue": "^3.0.3",
     "@vitejs/plugin-vue-jsx": "^2.0.1",
     "@vue/tsconfig": "^0.1.3",
+    "husky": "^8.0.3",
     "npm-run-all": "^4.1.5",
     "typescript": "~4.7.4",
     "vite": "^3.0.9",
